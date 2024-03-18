@@ -35,22 +35,29 @@ end
 
 task :check do
 	# hardcoded
-
-	sale_product_id = "5gCKJJ"
 	sale_product_name = "felleskostnader"
-
-	invoices_to_generate = generate_invoices_2024_data
 
 	client = Luca::API.new
 
-	existing_customers = client.customers["data"]["saleCustomers"]["nodes"]
+	# Find the product id of the first active product given the name
+	products = client.products["data"]["saleProducts"]["nodes"]
+	sale_product_id = products.find{|p| p['active'] == true && p['name'] == sale_product_name }['id']
 
+	invoices_to_generate = generate_invoices_2024_data
+
+	# Map the existing customers to their section names
+	# The section number is in the customer name by convention
+
+	existing_customers = client.customers["data"]["saleCustomers"]["nodes"]
     section_customers = existing_customers.map{|c| 
     	[customer_section(c['name']).to_i, c] 
     }.to_h
 
     # puts section_customers.to_json
 
+    # Find out all generated invoices already
+
+    # Improvement: restrict search period
 	existing_invoices = client.invoices["data"]["saleInvoices"]["nodes"]
     puts existing_invoices.to_json
 
@@ -97,10 +104,8 @@ task :check do
 
 end
 
-task :create_invoice_luca do
+task :luca_playground do
 	client = Luca::API.new
 	json = client.invoices
     puts json.to_json
-
-
 end

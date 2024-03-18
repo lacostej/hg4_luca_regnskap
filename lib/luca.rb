@@ -42,7 +42,7 @@ module Luca
 				'query' => 'query { saleCustomers { nodes { id , active, comment, email, id, name } } }',
 			}
 			response = self.class.post(self.class.base_uri, body: body.to_json, headers: headers)
-      		json = JSON.parse(response.body)
+			json = JSON.parse(response.body)
 		end
 
 		def invoices
@@ -50,7 +50,15 @@ module Luca
 				'query' => 'query { saleInvoices { nodes { id , draft , finalized, invoiceDate, invoiceNumber, paymentDays, sentAt, saleCustomer { id, email, name}, saleInvoiceLineItems {id, name, quantity, unit, unitPriceCents, saleProduct{id, name}} } } }',
 			}
 			response = self.class.post(self.class.base_uri, body: body.to_json, headers: headers)
-      		json = JSON.parse(response.body)
+			json = JSON.parse(response.body)
+		end
+
+		def products
+			body = {
+				'query' => 'query { saleProducts { nodes { id , name , active } } }',
+			}
+			response = self.class.post(self.class.base_uri, body: body.to_json, headers: headers)
+			json = JSON.parse(response.body)
 		end
 
 		def create_draft_invoice(
@@ -88,7 +96,7 @@ module Luca
 			}
 			# puts body.to_json
 			response = self.class.post(self.class.base_uri, body: body.to_json, headers: headers)
-      		json = JSON.parse(response.body)
+			json = JSON.parse(response.body)
 		end
 
 		def finalize_invoice(invoice_id: )
@@ -106,7 +114,7 @@ module Luca
 			}
 			# puts body.to_json
 			response = self.class.post(self.class.base_uri, body: body.to_json, headers: headers)
-      		json = JSON.parse(response.body)
+			json = JSON.parse(response.body)
 		end
 
 		def send_invoice_email(invoice_id: , email: )
@@ -123,7 +131,7 @@ module Luca
 			}
 			puts body.to_json
 			response = self.class.post(self.class.base_uri, body: body.to_json, headers: headers)
-      		json = JSON.parse(response.body)
+			json = JSON.parse(response.body)
 		end
 		def timestr(time)
 			Time.parse(time).iso8601(3)
@@ -165,8 +173,8 @@ module Luca
 			}
 		end
 
-	    def ua
-	      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:92.0) Gecko/20100101 Firefox/92.0'
-	    end		
+		def ua
+		'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:92.0) Gecko/20100101 Firefox/92.0'
+		end		
 	end
 end
