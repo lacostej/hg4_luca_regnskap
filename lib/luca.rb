@@ -10,7 +10,7 @@ module Luca
 
 		def initialize
 			require 'dotenv'
-			@env = Dotenv.load("secrets.json")
+			@env = Dotenv.load("secrets.env")
 			# personal token
 			@access_token = @env['personal_token']
 		end
